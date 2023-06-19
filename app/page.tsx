@@ -1,4 +1,5 @@
 import { Inter } from 'next/font/google'
+import {Posts} from "@/app/components/Posts";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -9,6 +10,7 @@ const Home = () => {
         Hello and Welcome 👏&nbsp;
         <span className="whitespace-pre-line">Hello, I&apos;m <span className="font-bold">Cloneable!</span></span>
       </p>
+      <Posts />
     </main>
   )
 }
