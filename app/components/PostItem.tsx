@@ -11,7 +11,7 @@ export const PostItem = ({post}: Props) => {
 
   return (
     <li className="mt-4 text-2xl">
-      <Link href={`posts/${id}`} className="underline hover:text-black/70">{title}</Link>
+      <Link href={`posts/${id}`} className="underline hover:text-black/70 dark:text-white/90 dark:hover:text-white">{title}</Link>
       <br/>
       <p className="text-sm mt-1">{formattedDate}</p>
     </li>
