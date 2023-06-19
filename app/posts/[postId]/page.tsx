@@ -1,10 +1,15 @@
-import {getPost} from "@/lib/posts";
+import {getPost, getSortedPosts} from "@/lib/posts";
 import {formatDate} from "@/lib/formatDate";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 
 type Props = {
   params: { postId: string }
+}
+
+export const generateStaticParams = async () => {
+  const posts = await getSortedPosts();
+  return posts.map(post => ({ postId: post.id }))
 }
 
 export const generateMetadata = async ({params: {postId}}: Props) => {
