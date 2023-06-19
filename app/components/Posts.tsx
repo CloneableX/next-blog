@@ -1,4 +1,4 @@
-import {getSortedPosts} from "@/lib/getSortedPosts";
+import {getSortedPosts} from "@/lib/posts";
 import {PostItem} from "@/app/components/PostItem";
 
 export const Posts = () => {
