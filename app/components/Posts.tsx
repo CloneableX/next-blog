@@ -1,8 +1,8 @@
 import {getSortedPosts} from "@/lib/posts";
 import {PostItem} from "@/app/components/PostItem";
 
-export const Posts = () => {
-  const posts = getSortedPosts();
+export const Posts = async () => {
+  const posts = await getSortedPosts();
 
   return (
     <section className="mx-auto w-max-2xl">

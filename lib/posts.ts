@@ -6,30 +6,34 @@ import remarkHtml from "remark-html";
 
 const postDirPath = path.join(process.cwd(), '/blogposts');
 
-export const getSortedPosts = (): Post[] => {
+async function buildPost(fileName: string, includeContent = false) {
+  const fileContent = fs.readFileSync(path.join(postDirPath, fileName));
+  const matterResult = matter(fileContent);
+  let post = {
+    id: fileName.replace(/\.md$/, ''),
+    title: matterResult.data.title,
+    date: matterResult.data.date
+  } as Post
+
+  if (includeContent) {
+    const contentHtml = await remark().use(remarkHtml).process(matterResult.content)
+    post.contentHtml = contentHtml.toString()
+  }
+
+  return post;
+}
+
+export const getSortedPosts = async (): Promise<Post[]> => {
   const fileNames = fs.readdirSync(postDirPath);
-  const posts = fileNames.map(fileName => {
-    const fileContent = fs.readFileSync(path.join(postDirPath, fileName));
-    const matterResult = matter(fileContent);
-    return {
-      id: fileName.replace(/\.md$/, ''),
-      title: matterResult.data.title,
-      date: matterResult.data.date
-    } as Post
-  });
+  const posts = await Promise.all(fileNames.map(fileName => buildPost(fileName)))
 
   return posts.sort((post, otherPost) => post.date < otherPost.date ? 1 : -1)
 }
 
 export const getPost = async (postId: string) => {
-  const fileContent = fs.readFileSync(path.join(postDirPath, `${postId}.md`));
-  const matterResult = matter(fileContent);
-  const contentHtml = await remark().use(remarkHtml).process(matterResult.content)
+  const fileName = `${postId}.md`;
 
-  return {
-    id: postId,
-    title: matterResult.data.title,
-    date: matterResult.data.date,
-    contentHtml: contentHtml.toString()
-  } as Post
+  const isFileExists = fs.existsSync(path.join(postDirPath, fileName));
+  if (!isFileExists) throw new Error('post does not exists.')
+  return buildPost(fileName, true)
 }
