@@ -26,7 +26,7 @@ const PostPage = async ({params: {postId}}: Props) => {
   const formattedDate = formatDate(date);
 
   return (
-    <main className="px-6 prose prose-xl prose-slate mx-auto">
+    <main className="px-6 prose prose-xl prose-slate dark:prose-invert mx-auto dark:text-white">
       <h2 className="text-3xl mt-4 mb-0">{title}</h2>
       <p className="mb-0">{formattedDate}</p>
       <article>
