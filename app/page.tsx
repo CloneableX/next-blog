@@ -1,7 +1,7 @@
-import { Inter } from 'next/font/google'
 import {Posts} from "@/app/components/Posts";
 
-const inter = Inter({ subsets: ['latin'] })
+// export const revalidate = 10
+export const revalidate = 86400
 
 const Home = () => {
   return (
