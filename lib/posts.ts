@@ -1,4 +1,9 @@
 import {compileMDX} from "next-mdx-remote/rsc";
+import {Video} from "@/app/components/Video";
+import {CustomImage} from "@/app/components/CustomImage";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 type FileTree = {
   tree: [
@@ -6,10 +11,6 @@ type FileTree = {
       path: string
     }
   ]
-}
-
-type File = {
-  content: string,
 }
 
 export const getPostByName = async (name: string): Promise<BlogPost | undefined> => {
@@ -24,10 +25,23 @@ export const getPostByName = async (name: string): Promise<BlogPost | undefined>
   if (!res.ok) return undefined
 
   const rawMDX = await res.text();
-  const { frontmatter, content } = await compileMDX<{ title: string, date: string, tags: string[] }>({
+  const {frontmatter, content} = await compileMDX<{ title: string, date: string, tags: string[] }>({
     source: rawMDX,
+    components: {
+      Video,
+      CustomImage,
+    },
     options: {
       parseFrontmatter: true,
+      mdxOptions: {
+        rehypePlugins: [
+          rehypeHighlight,
+          rehypeSlug,
+          [rehypeAutolinkHeadings, {
+            behavior: 'wrap'
+          }],
+        ],
+      },
     }
   });
 

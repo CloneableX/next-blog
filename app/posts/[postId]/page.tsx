@@ -2,6 +2,7 @@ import {getPostByName, getPostsMeta} from "@/lib/posts";
 import {formatDate} from "@/lib/formatDate";
 import Link from "next/link";
 import {notFound} from "next/navigation";
+import 'highlight.js/styles/github-dark.css'
 
 type Props = {
   params: { postId: string }
