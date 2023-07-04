@@ -1,4 +1,4 @@
-import {getPostsMeta, getSortedPosts} from "@/lib/posts";
+import {getPostsMeta} from "@/lib/posts";
 import {PostItem} from "@/app/components/PostItem";
 
 export const Posts = async () => {

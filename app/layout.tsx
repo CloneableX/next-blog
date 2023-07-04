@@ -15,7 +15,9 @@ export default function RootLayout({children}: {
       <body className="dark:bg-slate-800">
         <Navbar />
         <ProfilePic />
-        {children}
+        <main className="prose prose-xl prose-slate dark:prose-invert px-4 md:p-6 mx-auto">
+          {children}
+        </main>
       </body>
     </html>
   )

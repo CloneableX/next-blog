@@ -1,4 +1,4 @@
-import {getPost, getSortedPosts} from "@/lib/posts";
+import {getPostByName, getPostsMeta} from "@/lib/posts";
 import {formatDate} from "@/lib/formatDate";
 import Link from "next/link";
 import {notFound} from "next/navigation";
@@ -8,34 +8,49 @@ type Props = {
 }
 
 export const generateStaticParams = async () => {
-  const posts = await getSortedPosts();
-  return posts.map(post => ({ postId: post.id }))
+  const metas = await getPostsMeta();
+  if (!metas || metas.length === 0) return []
+
+  return metas.map(meta => ({ postId: meta.id }))
 }
 
 export const generateMetadata = async ({params: {postId}}: Props) => {
-  return getPost(postId)
-    .then((post) => ({title: post.title}))
-    .catch(() => ({title: 'Post Not Found'}))
+  const post = await getPostByName(`${postId}.mdx`);
+
+  if (!post) return { title: 'Post Not Found' }
+
+  return { title: post.meta.title }
 }
 
 const PostPage = async ({params: {postId}}: Props) => {
-  const post = await getPost(postId)
-    .then(post => post)
-    .catch(() => notFound());
-  const {title, date, contentHtml} = post
-  const formattedDate = formatDate(date);
+  const post = await getPostByName(`${postId}.mdx`)
+
+  if (!post) notFound()
+
+  const {meta, content} = post
+  const formattedDate = formatDate(meta.date);
+
+  const tags = meta.tags.map((tag, index) => (
+    <Link key={index} href={`tags/${tag}`}>{tag}</Link>
+  ));
 
   return (
-    <main className="px-6 prose prose-xl prose-slate dark:prose-invert mx-auto dark:text-white">
-      <h2 className="text-3xl mt-4 mb-0">{title}</h2>
-      <p className="mb-0">{formattedDate}</p>
+    <>
+      <h2 className="text-3xl mt-4 mb-0">{meta.title}</h2>
+      <p className="mb-0 text-sm">{formattedDate}</p>
       <article>
-        <section dangerouslySetInnerHTML={{__html: contentHtml!}}/>
-        <p>
-          <Link href="/">← Back to Home</Link>
-        </p>
+        {content}
       </article>
-    </main>
+      <section>
+        <h3>Related:</h3>
+        <div className="flex flex-row gap-4">
+          {...tags}
+        </div>
+      </section>
+      <p>
+        <Link href="/" className="mb-10">← Back to Home</Link>
+      </p>
+    </>
   )
 }
 
