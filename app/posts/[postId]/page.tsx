@@ -32,7 +32,7 @@ const PostPage = async ({params: {postId}}: Props) => {
   const formattedDate = formatDate(meta.date);
 
   const tags = meta.tags.map((tag, index) => (
-    <Link key={index} href={`tags/${tag}`}>{tag}</Link>
+    <Link key={index} href={`/tags/${tag}`}>{tag}</Link>
   ));
 
   return (
